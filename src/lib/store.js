@@ -118,11 +118,3 @@ export const useStore = create((set, get) => ({
   }
 }))
 
-// Auth store alias for backward compatibility
-export const useAuthStore = useStore
-
-
-
-// Progress store alias for backward compatibility
-export const useProgressStore = useStore
-

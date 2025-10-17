@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { useAuthStore } from '../lib/store'
+import { useStore } from '../lib/store'
 import MatrixRain from '../components/MatrixRain'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
 import { Label } from '../components/ui/label'
 import toast from 'react-hot-toast'
-import logo from '../assets/logo.png'
+import logo from '../assets/Logo.png'
 
 const Login = () => {
   const [email, setEmail] = useState('')

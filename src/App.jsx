@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { Toaster } from 'react-hot-toast'
-import { useAuthStore } from './lib/store'
+import { useStore } from './lib/store'
 import Login from './pages/Login'
 import Welcome from './pages/Welcome'
 import Chat from './pages/Chat'
@@ -11,7 +11,7 @@ import './App.css'
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
-  const { user, loading } = useAuthStore()
+  const { user, loading } = useStore()
 
   if (loading) {
     return (
@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children }) => {
 }
 
 function App() {
-  const initialize = useAuthStore((state) => state.initialize)
+  const initialize = useStore((state) => state.initialize)
 
   useEffect(() => {
     initialize()

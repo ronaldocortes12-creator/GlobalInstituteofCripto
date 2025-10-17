@@ -53,6 +53,15 @@ export const modules = [
   }
 ]
 
+// Export flat list of lessons for compatibility
+export const COURSE_LESSONS = modules.flatMap(module => 
+  module.lessons.map(lesson => ({
+    ...lesson,
+    moduleId: module.id,
+    moduleName: module.name
+  }))
+)
+
 export const getAllLessons = () => {
   return modules.flatMap(module => 
     module.lessons.map(lesson => ({
@@ -84,8 +93,4 @@ export const getTotalProgress = (completedLessons) => {
   const totalLessons = getAllLessons().length
   return Math.round((completedLessons.length / totalLessons) * 100)
 }
-
-
-// Alias for backward compatibility
-export const COURSE_LESSONS = getAllLessons()
 

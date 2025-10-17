@@ -43,157 +43,330 @@
 
 :root {
   --radius: 0.75rem;
-  /* Paleta Global Institute of Cripto - Premium & Futurista */
-  --background: #000d1a; /* Azul escuro premium */
-  --foreground: #f0f4f8; /* Branco suave */
-  --card: #001020; /* Azul escuro card */
-  --card-foreground: #f0f4f8;
-  --popover: #001020;
-  --popover-foreground: #f0f4f8;
-  --primary: #00ff9f; /* Verde ciano - acento primário */
-  --primary-foreground: #000d1a;
-  --secondary: #00d4ff; /* Azul elétrico - acento secundário */
-  --secondary-foreground: #000d1a;
-  --muted: #001428;
-  --muted-foreground: #8b9bb0;
-  --accent: #00ff9f;
-  --accent-foreground: #000d1a;
-  --destructive: #ff4444;
-  --border: #001428;
-  --input: #001020;
-  --ring: #00ff9f;
-  --chart-1: #00ff9f;
+  
+  /* Paleta Premium Dark Futurística - Matrix Cipher Log */
+  --background: #0a0e1a; /* Azul escuro profundo quase preto */
+  --foreground: #e8f0f7; /* Branco azulado suave */
+  
+  --card: #0f1420; /* Card azul escuro */
+  --card-foreground: #e8f0f7;
+  
+  --popover: #0f1420;
+  --popover-foreground: #e8f0f7;
+  
+  --primary: #00ffaa; /* Verde neon ciano - acento principal */
+  --primary-foreground: #0a0e1a;
+  
+  --secondary: #00d4ff; /* Azul elétrico brilhante */
+  --secondary-foreground: #0a0e1a;
+  
+  --muted: #151b2b;
+  --muted-foreground: #7a8ba0;
+  
+  --accent: #00ffaa;
+  --accent-foreground: #0a0e1a;
+  
+  --destructive: #ff3366;
+  
+  --border: #1a2332; /* Bordas sutis */
+  --input: #0f1420;
+  --ring: #00ffaa;
+  
+  --chart-1: #00ffaa;
   --chart-2: #00d4ff;
-  --chart-3: #7c3aed;
-  --chart-4: #f59e0b;
+  --chart-3: #8b5cf6;
+  --chart-4: #fbbf24;
   --chart-5: #ef4444;
-  --sidebar: #001020;
-  --sidebar-foreground: #f0f4f8;
-  --sidebar-primary: #00ff9f;
-  --sidebar-primary-foreground: #000d1a;
-  --sidebar-accent: #001428;
-  --sidebar-accent-foreground: #f0f4f8;
-  --sidebar-border: #001428;
-  --sidebar-ring: #00ff9f;
+  
+  --sidebar: #0f1420;
+  --sidebar-foreground: #e8f0f7;
+  --sidebar-primary: #00ffaa;
+  --sidebar-primary-foreground: #0a0e1a;
+  --sidebar-accent: #151b2b;
+  --sidebar-accent-foreground: #e8f0f7;
+  --sidebar-border: #1a2332;
+  --sidebar-ring: #00ffaa;
 }
 
 .dark {
-  /* Modo escuro já é o padrão, mantendo a mesma paleta */
-  --background: #000d1a;
-  --foreground: #f0f4f8;
-  --card: #001020;
-  --card-foreground: #f0f4f8;
-  --popover: #001020;
-  --popover-foreground: #f0f4f8;
-  --primary: #00ff9f;
-  --primary-foreground: #000d1a;
+  /* Modo escuro já é o padrão */
+  --background: #0a0e1a;
+  --foreground: #e8f0f7;
+  --card: #0f1420;
+  --card-foreground: #e8f0f7;
+  --popover: #0f1420;
+  --popover-foreground: #e8f0f7;
+  --primary: #00ffaa;
+  --primary-foreground: #0a0e1a;
   --secondary: #00d4ff;
-  --secondary-foreground: #000d1a;
-  --muted: #001428;
-  --muted-foreground: #8b9bb0;
-  --accent: #00ff9f;
-  --accent-foreground: #000d1a;
-  --destructive: #ff4444;
-  --border: #001428;
-  --input: #001020;
-  --ring: #00ff9f;
-  --chart-1: #00ff9f;
+  --secondary-foreground: #0a0e1a;
+  --muted: #151b2b;
+  --muted-foreground: #7a8ba0;
+  --accent: #00ffaa;
+  --accent-foreground: #0a0e1a;
+  --destructive: #ff3366;
+  --border: #1a2332;
+  --input: #0f1420;
+  --ring: #00ffaa;
+  --chart-1: #00ffaa;
   --chart-2: #00d4ff;
-  --chart-3: #7c3aed;
-  --chart-4: #f59e0b;
+  --chart-3: #8b5cf6;
+  --chart-4: #fbbf24;
   --chart-5: #ef4444;
-  --sidebar: #001020;
-  --sidebar-foreground: #f0f4f8;
-  --sidebar-primary: #00ff9f;
-  --sidebar-primary-foreground: #000d1a;
-  --sidebar-accent: #001428;
-  --sidebar-accent-foreground: #f0f4f8;
-  --sidebar-border: #001428;
-  --sidebar-ring: #00ff9f;
 }
 
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-  }
-}
-
-/* Matrix Rain Animation */
-@keyframes matrix-fall {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(100vh);
-    opacity: 0;
-  }
-}
-
-.matrix-char {
-  animation: matrix-fall linear infinite;
-  color: #00ff9f;
-  text-shadow: 0 0 8px #00ff9f, 0 0 12px #00ff9f80;
-}
-
-/* Glassmorphism Effects */
-.glass {
-  background: rgba(0, 16, 32, 0.7);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 255, 159, 0.1);
-}
-
-.glass-hover {
-  transition: all 0.3s ease;
-}
-
-.glass-hover:hover {
-  background: rgba(0, 16, 32, 0.85);
-  border-color: rgba(0, 255, 159, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(0, 255, 159, 0.15);
-}
-
-/* Gradient Accents */
-.gradient-primary {
-  background: linear-gradient(135deg, #00ff9f 0%, #00d4ff 100%);
-}
-
-.gradient-card {
-  background: linear-gradient(135deg, #001020 0%, #001428 100%);
-}
-
-/* Smooth Transitions */
 * {
-  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  @apply border-border;
 }
 
-/* Custom Scrollbar */
+body {
+  @apply bg-background text-foreground;
+  font-feature-settings: "rlig" 1, "calt" 1;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar personalizada premium */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #001020;
+  background: var(--background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #001428;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #00ff9f;
+  background: linear-gradient(180deg, var(--secondary) 0%, var(--primary) 100%);
+}
+
+/* Efeitos de brilho premium */
+.glow-primary {
+  box-shadow: 0 0 20px rgba(0, 255, 170, 0.3),
+              0 0 40px rgba(0, 255, 170, 0.1);
+}
+
+.glow-secondary {
+  box-shadow: 0 0 20px rgba(0, 212, 255, 0.3),
+              0 0 40px rgba(0, 212, 255, 0.1);
+}
+
+/* Animações suaves */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  50% {
+    opacity: 0.8;
+    filter: brightness(1.2);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Gradientes premium */
+.gradient-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+.gradient-card {
+  background: linear-gradient(135deg, var(--card) 0%, rgba(15, 20, 32, 0.8) 100%);
+}
+
+/* Efeito glassmorphism */
+.glass {
+  background: rgba(15, 20, 32, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 170, 0.1);
+}
+
+/* Texto com gradiente */
+.text-gradient {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Botões premium */
+button {
+  transition: all 0.2s ease-in-out;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+button:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Cards com hover effect */
+.card-hover {
+  transition: all 0.3s ease-in-out;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 255, 170, 0.15);
+  border-color: rgba(0, 255, 170, 0.3);
+}
+
+/* Inputs premium */
+input, textarea {
+  transition: all 0.2s ease-in-out;
+}
+
+input:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgba(0, 255, 170, 0.1);
+}
+
+/* Animação de entrada suave */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+/* Efeito de shimmer para loading */
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(15, 20, 32, 0) 0%,
+    rgba(0, 255, 170, 0.1) 50%,
+    rgba(15, 20, 32, 0) 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* Bordas com gradiente */
+.border-gradient {
+  position: relative;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.border-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Efeito de scan line futurístico */
+@keyframes scan {
+  0% {
+    top: -100%;
+  }
+  100% {
+    top: 100%;
+  }
+}
+
+.scan-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-effect::after {
+  content: '';
+  position: absolute;
+  top: -100%;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(0, 255, 170, 0.05) 50%,
+    transparent 100%
+  );
+  animation: scan 8s linear infinite;
+  pointer-events: none;
+}
+
+/* Tipografia premium */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* Links com efeito hover */
+a {
+  transition: all 0.2s ease-in-out;
+}
+
+a:hover {
+  color: var(--primary);
+}
+
+/* Badges e tags */
+.badge {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold;
+  background: linear-gradient(135deg, rgba(0, 255, 170, 0.1), rgba(0, 212, 255, 0.1));
+  border: 1px solid rgba(0, 255, 170, 0.2);
+  color: var(--primary);
+}
+
+/* Dividers premium */
+.divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--border) 50%,
+    transparent 100%
+  );
+}
+
+/* Sombras premium em camadas */
+.shadow-premium {
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.3),
+    0 10px 20px rgba(0, 255, 170, 0.05),
+    0 20px 40px rgba(0, 212, 255, 0.03);
+}
+
+/* Transições globais suaves */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }
 

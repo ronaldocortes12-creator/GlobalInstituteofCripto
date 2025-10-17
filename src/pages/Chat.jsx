@@ -4,10 +4,11 @@ import TabBar from '../components/TabBar'
 import { ChatSidebar } from '../components/ChatSidebar'
 import { Button } from '../components/ui/button'
 import { Input } from '../components/ui/input'
-import { Send, Bot, User, Menu } from 'lucide-react'
+import { Send, User, Menu } from 'lucide-react'
 import { useToast } from '../components/ui/use-toast'
 import { supabase } from '../lib/supabase'
 import { COURSE_LESSONS } from '../lib/courseData'
+import jeffWuAvatar from '../assets/JeffWuQuadrado.png'
 
 const Chat = () => {
   const user = useStore((state) => state.user)
@@ -149,7 +150,9 @@ Nosso treinamento será por aqui, e começamos com o básico sobre cripto para o
       })
 
       if (!response.ok) {
-        throw new Error('Erro ao obter resposta da IA')
+        const errorData = await response.json().catch(() => ({}))
+        console.error('API Error:', errorData)
+        throw new Error(errorData.error || 'Erro ao obter resposta da IA')
       }
 
       // Handle streaming response
@@ -224,7 +227,7 @@ Nosso treinamento será por aqui, e começamos com o básico sobre cripto para o
       console.error('Error sending message:', error)
       toast({
         title: 'Erro',
-        description: 'Não foi possível enviar a mensagem. Tente novamente.',
+        description: error.message || 'Não foi possível enviar a mensagem. Tente novamente.',
         variant: 'destructive',
       })
     } finally {
@@ -247,54 +250,78 @@ Nosso treinamento será por aqui, e começamos com o básico sobre cripto para o
 
       {/* Main Chat Area */}
       <div className="flex-1 flex flex-col">
-        {/* Header */}
-        <div className="bg-card border-b border-border px-6 py-4 flex items-center gap-3">
+        {/* Header - Premium Design */}
+        <div className="bg-gradient-to-r from-card via-card/95 to-card border-b border-primary/20 px-6 py-4 flex items-center gap-4 shadow-lg shadow-primary/5">
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="md:hidden"
+            className="md:hidden hover:bg-primary/10"
           >
             <Menu className="h-5 w-5" />
           </Button>
-          <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center">
-            <Bot className="h-6 w-6 text-primary" />
+          
+          {/* Jeff Wu Avatar */}
+          <div className="relative">
+            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/30 shadow-lg shadow-primary/20">
+              <img 
+                src={jeffWuAvatar} 
+                alt="Jeff Wu" 
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-card"></div>
           </div>
+          
           <div className="flex-1">
-            <h1 className="font-bold text-lg">Jeff Wu</h1>
+            <h1 className="font-bold text-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              Jeff Wu
+            </h1>
             <p className="text-xs text-muted-foreground">
               {currentLesson ? `Dia ${currentLesson.day}: ${currentLesson.title}` : 'Seu Professor de Trading'}
             </p>
           </div>
+          
+          {/* Decorative element */}
+          <div className="hidden md:flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+            <span>Online</span>
+          </div>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4 pb-32">
+        <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 pb-32 bg-gradient-to-b from-background to-background/95">
           {currentMessages.map((msg, index) => (
             <div
               key={index}
-              className={`flex gap-3 ${
+              className={`flex gap-3 animate-in slide-in-from-bottom-4 duration-300 ${
                 msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'
               }`}
             >
               <div
-                className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  msg.role === 'user'
-                    ? 'bg-secondary/20'
-                    : 'bg-primary/20'
+                className={`flex-shrink-0 ${
+                  msg.role === 'user' ? '' : ''
                 }`}
               >
                 {msg.role === 'user' ? (
-                  <User className="h-5 w-5 text-secondary" />
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-secondary/30 to-secondary/10 flex items-center justify-center border border-secondary/20">
+                    <User className="h-5 w-5 text-secondary" />
+                  </div>
                 ) : (
-                  <Bot className="h-5 w-5 text-primary" />
+                  <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30 shadow-md shadow-primary/10">
+                    <img 
+                      src={jeffWuAvatar} 
+                      alt="Jeff Wu" 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 )}
               </div>
               <div
-                className={`max-w-[75%] rounded-2xl px-4 py-3 ${
+                className={`max-w-[75%] rounded-2xl px-5 py-3 shadow-md ${
                   msg.role === 'user'
-                    ? 'bg-secondary/20 text-foreground'
-                    : 'bg-card border border-border'
+                    ? 'bg-gradient-to-br from-secondary/20 to-secondary/10 text-foreground border border-secondary/20'
+                    : 'bg-gradient-to-br from-card to-card/80 border border-primary/10 shadow-primary/5'
                 }`}
               >
                 <p className="text-sm whitespace-pre-wrap leading-relaxed">
@@ -306,14 +333,18 @@ Nosso treinamento será por aqui, e começamos com o básico sobre cripto para o
 
           {/* Streaming message */}
           {streamingMessage && (
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
-                <Bot className="h-5 w-5 text-primary animate-pulse" />
+            <div className="flex gap-3 animate-in slide-in-from-bottom-4">
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30 shadow-md shadow-primary/10">
+                <img 
+                  src={jeffWuAvatar} 
+                  alt="Jeff Wu" 
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="max-w-[75%] rounded-2xl px-4 py-3 bg-card border border-border">
+              <div className="max-w-[75%] rounded-2xl px-5 py-3 bg-gradient-to-br from-card to-card/80 border border-primary/10 shadow-md shadow-primary/5">
                 <p className="text-sm whitespace-pre-wrap leading-relaxed">
                   {streamingMessage}
-                  <span className="inline-block w-2 h-4 bg-primary ml-1 animate-pulse" />
+                  <span className="inline-block w-2 h-4 bg-primary ml-1 animate-pulse rounded" />
                 </p>
               </div>
             </div>
@@ -321,12 +352,16 @@ Nosso treinamento será por aqui, e começamos com o básico sobre cripto para o
 
           {/* Loading indicator */}
           {isLoading && !streamingMessage && (
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
-                <Bot className="h-5 w-5 text-primary animate-pulse" />
+            <div className="flex gap-3 animate-in slide-in-from-bottom-4">
+              <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/30 shadow-md shadow-primary/10">
+                <img 
+                  src={jeffWuAvatar} 
+                  alt="Jeff Wu" 
+                  className="w-full h-full object-cover"
+                />
               </div>
-              <div className="bg-card border border-border rounded-2xl px-4 py-3">
-                <div className="flex gap-1">
+              <div className="bg-gradient-to-br from-card to-card/80 border border-primary/10 rounded-2xl px-5 py-3 shadow-md">
+                <div className="flex gap-1.5">
                   <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
                   <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
                   <div className="w-2 h-2 bg-primary rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
@@ -338,21 +373,21 @@ Nosso treinamento será por aqui, e começamos com o básico sobre cripto para o
           <div ref={messagesEndRef} />
         </div>
 
-        {/* Input */}
-        <div className="border-t border-border px-4 py-4 bg-background/95 backdrop-blur-sm">
-          <div className="flex gap-2">
+        {/* Input - Premium Design */}
+        <div className="border-t border-primary/20 px-4 py-4 bg-gradient-to-t from-card/95 to-background/95 backdrop-blur-lg shadow-2xl shadow-primary/5">
+          <div className="flex gap-3 max-w-4xl mx-auto">
             <Input
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && !e.shiftKey && handleSendMessage()}
               placeholder="Digite sua mensagem..."
-              className="flex-1 bg-card border-border"
+              className="flex-1 bg-card/50 border-primary/20 focus:border-primary/40 text-foreground placeholder:text-muted-foreground rounded-xl px-4 py-3 shadow-inner"
               disabled={isLoading}
             />
             <Button
               onClick={handleSendMessage}
               disabled={!input.trim() || isLoading}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
+              className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground shadow-lg shadow-primary/20 rounded-xl px-6 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100"
             >
               <Send className="h-5 w-5" />
             </Button>

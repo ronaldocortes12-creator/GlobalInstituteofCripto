@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { useAuthStore } from '../lib/store'
+import { useStore } from '../lib/store'
 import MatrixRain from '../components/MatrixRain'
 import { Button } from '../components/ui/button'
 import { ArrowRight, ArrowLeft } from 'lucide-react'
@@ -38,7 +38,7 @@ const welcomeContent = {
 const Welcome = () => {
   const { step } = useParams()
   const navigate = useNavigate()
-  const user = useAuthStore((state) => state.user)
+  const user = useStore((state) => state.user)
   const currentStep = parseInt(step) || 1
   const content = welcomeContent[currentStep]
 

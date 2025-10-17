@@ -8,19 +8,44 @@ export const config = {
 }
 
 export default async function handler(req) {
+  // CORS headers
+  const corsHeaders = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+  }
+
+  // Handle OPTIONS request for CORS
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      status: 204,
+      headers: corsHeaders
+    })
+  }
+
   if (req.method !== 'POST') {
-    return new Response('Method not allowed', { status: 405 })
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
   }
 
   try {
     const { messages } = await req.json()
 
-    // Get Gemini API key
+    if (!messages || !Array.isArray(messages)) {
+      throw new Error('Invalid messages format')
+    }
+
+    // Get Gemini API key from environment
     const geminiApiKey = process.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY
     
     if (!geminiApiKey) {
+      console.error('Gemini API key not found in environment variables')
       throw new Error('Gemini API key not configured')
     }
+
+    console.log('Processing chat request with', messages.length, 'messages')
 
     // Prepare messages for Gemini API
     // Gemini doesn't support system messages, so we prepend the system prompt as the first user message
@@ -31,11 +56,11 @@ export default async function handler(req) {
       },
       {
         role: 'model',
-        parts: [{ text: 'Entendido. Sou Jeff Wu, seu professor de trading. Vamos começar?' }]
+        parts: [{ text: 'Entendido. Sou Jeff Wu, seu professor de trading. Como posso te ajudar hoje?' }]
       }
     ]
 
-    // Add user messages
+    // Add conversation history
     for (const msg of messages) {
       geminiMessages.push({
         role: msg.role === 'assistant' ? 'model' : 'user',
@@ -44,30 +69,51 @@ export default async function handler(req) {
     }
 
     // Call Google Gemini API with streaming
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:streamGenerateContent?key=${geminiApiKey}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:streamGenerateContent?key=${geminiApiKey}`
+    
+    console.log('Calling Gemini API...')
+    
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        contents: geminiMessages,
+        generationConfig: {
+          temperature: 0.8,
+          maxOutputTokens: 2048,
+          topP: 0.95,
+          topK: 40
         },
-        body: JSON.stringify({
-          contents: geminiMessages,
-          generationConfig: {
-            temperature: 0.8,
-            maxOutputTokens: 1024,
-            topP: 0.95,
-            topK: 40
+        safetySettings: [
+          {
+            category: 'HARM_CATEGORY_HARASSMENT',
+            threshold: 'BLOCK_NONE'
+          },
+          {
+            category: 'HARM_CATEGORY_HATE_SPEECH',
+            threshold: 'BLOCK_NONE'
+          },
+          {
+            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+            threshold: 'BLOCK_NONE'
+          },
+          {
+            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+            threshold: 'BLOCK_NONE'
           }
-        })
-      }
-    )
+        ]
+      })
+    })
 
     if (!response.ok) {
       const errorText = await response.text()
-      console.error('Gemini API error:', errorText)
-      throw new Error(`Gemini API error: ${response.statusText}`)
+      console.error('Gemini API error:', response.status, errorText)
+      throw new Error(`Gemini API error: ${response.status} - ${errorText}`)
     }
+
+    console.log('Gemini API response received, starting stream...')
 
     // Stream response back to client
     const encoder = new TextEncoder()
@@ -80,7 +126,10 @@ export default async function handler(req) {
         try {
           while (true) {
             const { done, value } = await reader.read()
-            if (done) break
+            if (done) {
+              console.log('Stream completed')
+              break
+            }
 
             const chunk = decoder.decode(value, { stream: true })
             const lines = chunk.split('\n').filter(line => line.trim())
@@ -102,7 +151,7 @@ export default async function handler(req) {
                 }
               } catch (e) {
                 // Skip invalid JSON lines
-                console.error('JSON parse error:', e)
+                console.error('JSON parse error:', e.message)
               }
             }
           }
@@ -118,6 +167,7 @@ export default async function handler(req) {
 
     return new Response(stream, {
       headers: {
+        ...corsHeaders,
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
         'Connection': 'keep-alive'
@@ -125,9 +175,12 @@ export default async function handler(req) {
     })
   } catch (error) {
     console.error('Chat API error:', error)
-    return new Response(JSON.stringify({ error: error.message }), {
+    return new Response(JSON.stringify({ 
+      error: error.message || 'Internal server error',
+      details: error.toString()
+    }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     })
   }
 }
